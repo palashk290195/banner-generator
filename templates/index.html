@@ -6,6 +6,32 @@
     <title>Banner Generator</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        #mic-icon {
+            cursor: pointer;
+            font-size: 24px;
+            color: #007bff;
+            margin-left: 10px;
+        }
+        #mic-icon.recording {
+            color: red;
+        }
+        .background-logo-lists {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .img-thumbnail-small {
+            max-width: 100px;
+            max-height: 50px;
+            object-fit: cover;
+        }
+        .json-structure {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid mt-4">
@@ -14,66 +40,83 @@
         <div class="col-md-6">
             <h1>Banner Generator</h1>
 
+            <!-- Text Command Input with Microphone -->
             <form method="POST" action="/generate" class="mb-3">
-                <div class="form-group">
-                    <label for="command">Enter your command:</label>
-                    <input type="text" id="command" name="command" class="form-control" required>
+                <div class="form-group d-flex align-items-center">
+                    <label for="command" class="mr-2">Enter your command:</label>
+                    <input type="text" id="command" name="command" class="form-control" required style="flex: 1;">
+                    <span id="mic-icon" onclick="toggleRecording()">
+                        <i class="fas fa-microphone"></i>
+                    </span>
                 </div>
                 <button type="submit" class="btn btn-primary">Generate Banner</button>
             </form>
 
-            <h2>Background Images</h2>
-            <form method="POST" action="/upload_background" enctype="multipart/form-data" class="mb-3">
-                <div class="form-group">
-                    <input type="file" name="file" class="form-control-file">
-                    <button type="submit" class="btn btn-success mt-2">Upload Background</button>
-                </div>
-            </form>
-            <ul class="list-group">
-                {% for background in backgrounds %}
-                <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <img src="{{ url_for('static', filename='backgrounds/' ~ background) }}" width="100" height="50" class="img-thumbnail">
-                            <span>{{ background }}</span>
+            <div class="row">
+                <!-- Background Images Section -->
+                <div class="col-md-6 background-logo-lists">
+                    <h2>Background Images</h2>
+                    <form method="POST" action="/upload_background" enctype="multipart/form-data" class="mb-3">
+                        <div class="form-group">
+                            <input type="file" name="file" class="form-control-file">
+                            <button type="submit" class="btn btn-success mt-2">Upload Background</button>
                         </div>
-                        <button onclick="deleteBackground('{{ background }}')" class="btn btn-danger btn-sm">Delete</button>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-
-            <h2 class="mt-4">Logos</h2>
-            <form method="POST" action="/upload_logo" enctype="multipart/form-data" class="mb-3">
-                <div class="form-group">
-                    <input type="file" name="file" class="form-control-file">
-                    <button type="submit" class="btn btn-success mt-2">Upload Logo</button>
+                    </form>
+                    <ul class="list-group">
+                        {% for background in backgrounds %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="{{ url_for('static', filename='backgrounds/' ~ background) }}" class="img-thumbnail-small">
+                                    <span>{{ background }}</span>
+                                </div>
+                                <button onclick="deleteBackground('{{ background }}')" class="btn btn-danger btn-sm">Delete</button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </form>
-            <ul class="list-group">
-                {% for logo in logos %}
-                <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <img src="{{ url_for('static', filename='logos/' ~ logo) }}" width="100" height="50" class="img-thumbnail">
-                            <span>{{ logo }}</span>
-                        </div>
-                        <button onclick="deleteLogo('{{ logo }}')" class="btn btn-danger btn-sm">Delete</button>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
 
+                <!-- Logos Section -->
+                <div class="col-md-6 background-logo-lists">
+                    <h2>Logos</h2>
+                    <form method="POST" action="/upload_logo" enctype="multipart/form-data" class="mb-3">
+                        <div class="form-group">
+                            <input type="file" name="file" class="form-control-file">
+                            <button type="submit" class="btn btn-success mt-2">Upload Logo</button>
+                        </div>
+                    </form>
+                    <ul class="list-group">
+                        {% for logo in logos %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="{{ url_for('static', filename='logos/' ~ logo) }}" class="img-thumbnail-small">
+                                    <span>{{ logo }}</span>
+                                </div>
+                                <button onclick="deleteLogo('{{ logo }}')" class="btn btn-danger btn-sm">Delete</button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JSON Structure Display -->
             <h2 class="mt-4">Current JSON Structure</h2>
-            <pre class="bg-light p-3">{{ json_data }}</pre>
+            <pre class="bg-light p-3 json-structure">{{ json_data }}</pre>
         </div>
 
         <!-- Right Column: Generated Banner -->
         <div class="col-md-6">
             <h2>Generated Banner</h2>
-            <img src="{{ url_for('static', filename=banner_path.split('/')[-1]) }}" alt="Generated Banner" class="img-fluid">
-            <br><br>
-            <a href="/download_banner"><button class="btn btn-info">Download Banner</button></a>
+            {% if banner_path %}
+                <img src="{{ url_for('static', filename=banner_path.split('/')[-1]) }}" alt="Generated Banner" class="img-fluid">
+                <br><br>
+                <a href="/download_banner"><button class="btn btn-info">Download Banner</button></a>
+            {% else %}
+                <p>No banner generated yet.</p>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -82,19 +125,47 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 
 <script>
-    function deleteBackground(filename) {
-        fetch('/delete_background/' + filename)
-            .then(response => response.json())
-            .then(data => location.reload());
-    }
+    let mediaRecorder;
+    let audioChunks = [];
 
-    function deleteLogo(filename) {
-        fetch('/delete_logo/' + filename)
-            .then(response => response.json())
-            .then(data => location.reload());
+    async function toggleRecording() {
+        const micIcon = document.getElementById("mic-icon");
+        if (micIcon.classList.contains("recording")) {
+            // Stop recording
+            mediaRecorder.stop();
+            micIcon.classList.remove("recording");
+            micIcon.innerHTML = '<i class="fas fa-microphone"></i>';
+        } else {
+            // Start recording
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'voice_command.wav');
+
+                // Send the audio file to the server for transcription
+                const response = await fetch('/voice_command', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                document.getElementById('command').value = result.transcription;
+            };
+
+            mediaRecorder.start();
+            micIcon.classList.add("recording");
+            micIcon.innerHTML = '<i class="fas fa-microphone-alt"></i>';
+        }
     }
 </script>
+
 </body>
 </html>
