@@ -2,7 +2,12 @@ import json
 import os
 from PIL import Image, ImageDraw, ImageFont
 from openai import OpenAI
-client = OpenAI(api_key="your-api-key")
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
+openai_api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=openai_api_key)
+
 
 def create_banner_from_json(json_data):
     # Parse JSON input
@@ -73,7 +78,7 @@ def create_banner_from_json(json_data):
     # Center-align the sub copy text with strike-through if needed
     font_bold = ImageFont.truetype("/Library/Fonts/Arial Bold.ttf", 36)
 
-    if strike_through_text:
+    if strike_through_text and strike_through_text in sub_copy:
         sub_copy_parts = sub_copy.split(strike_through_text)
         text_start_x = (banner_size[0] - draw.textbbox((0, 0), sub_copy, font=font_bold)[2]) // 2
 
