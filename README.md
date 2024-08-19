@@ -1,122 +1,100 @@
-# Banner Generator Web Application
+# Banner Generator Web App
 
-This project is a Flask-based web application that allows users to dynamically generate marketing banners by uploading images, specifying commands, and leveraging GPT for natural language processing. Users can interact with the app to create customized banners using background images, logos, and text inputs. The application automatically generates a banner based on the inputs and allows for downloading the final output.
+This project is a Flask-based web application that allows users to generate banners by specifying commands either through text input or voice commands. The app uses the OpenAI API for transcribing voice commands and generating dynamic banners based on user inputs. Users can upload background images and logos, which are then displayed for easy selection. The app generates the final banner based on a JSON structure that is updated in real-time according to the user's commands.
 
 ## Features
 
-- **Dynamic Banner Creation:** Users can create banners by specifying background images, logos, and text inputs.
-- **File Management:** Upload and manage background images and logos directly through the web interface.
-- **Natural Language Commands:** Users can provide commands in natural language to update the banner configuration.
-- **Contextual File Matching:** The app can approximate file names from user commands and match them with existing files.
-- **Downloadable Banners:** The generated banner can be downloaded directly from the application.
-- **Responsive UI:** Built using Bootstrap for a modern and responsive design.
-![Uploading image.png…]()
+- **Text Command Input:** Users can input text commands to specify how the banner should be generated.
+- **Voice Command Input:** Users can record voice commands using a microphone. The audio is transcribed to text using the OpenAI Whisper API.
+- **Upload Backgrounds and Logos:** Users can upload background images and logos that are displayed on the interface.
+- **Real-time Banner Preview:** The banner is dynamically generated and previewed on the right side of the page.
+- **Downloadable Banner:** The generated banner can be downloaded directly from the web interface.
+- **JSON Structure Visualization:** The current JSON structure that defines the banner is displayed and updated in real-time.
 
+## Tech Stack
 
-## Technology Stack
+- **Flask:** Python web framework for the backend.
+- **Bootstrap:** Frontend framework for responsive design.
+- **JavaScript:** For handling the microphone recording and form submissions.
+- **OpenAI API:** Used for transcribing voice commands.
+- **PIL (Pillow):** Used for image processing and banner generation.
+- **HTML/CSS:** For the structure and styling of the web app.
 
-- **Python**
-- **Flask** - Web framework for creating the web app.
-- **Pillow** - Image processing library for creating and editing the banner.
-- **OpenAI GPT** - Used for interpreting natural language commands.
-- **Bootstrap** - Frontend framework for responsive design.
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.8 or higher
-- An OpenAI API key
-
-### Installation
+## Installation
 
 1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/palashk290195/banner-generator.git
-    cd banner-generator
-    ```
+   ```bash
+   git clone https://github.com/palashk290195/banner-generator.git
+   cd banner-generator
+   ```
 
-2. **Create and activate a virtual environment:**
+2. **Create a virtual environment:**
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    ```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-3. **Install the dependencies:**
+3. **Install the required dependencies:**
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4. **Set your OpenAI API key:**
+4. **Set up your API keys:**
 
-   Replace `your-openai-api-key` in `banner_generator.py` with your actual OpenAI API key.
+   Create a `.env` file in the project root with your OpenAI API key:
 
-    ```python
-    client = OpenAI(api_key="your-api-key")
-    ```
+   ```env
+   OPENAI_API_KEY=your_openai_api_key
+   ```
 
 5. **Run the application:**
 
-    ```bash
-    python3 app.py
-    ```
+   ```bash
+   python app.py
+   ```
 
 6. **Access the application:**
 
-    Open your web browser and navigate to `http://127.0.0.1:5000/`.
+   Open your browser and navigate to `http://127.0.0.1:5000`.
 
-### Directory Structure
+## Usage
 
-```
-BannerApp/
-│
-├── static/
-│   ├── backgrounds/      # Store background images here
-│   └── logos/            # Store logo images here
-│
-├── templates/
-│   └── index.html        # Main HTML file for the web app
-│
-├── app.py                # Flask application
-├── banner_generator.py   # Banner generation and OpenAI interaction logic
-└── requirements.txt      # List of Python dependencies
-```
+1. **Enter Command:**
+   - Type your command into the input box to generate a banner.
 
-### Usage
+2. **Use Voice Command:**
+   - Click on the microphone icon to start recording your voice command. Click again to stop recording. The transcribed text will appear in the command input box.
 
-1. **Upload Backgrounds and Logos:**
-   - Use the web interface to upload background images and logos.
-   - Uploaded images will appear in the respective lists with the option to delete them.
+3. **Upload Images:**
+   - Upload background images and logos using the provided upload buttons. These will be displayed in the left column.
 
-2. **Generate a Banner:**
-   - Enter commands in the input field to customize the banner.
-   - Example: "Change the background to `bg1.jpg` and use `logo1` logo."
-   - The application will update the banner based on your command and available files.
+4. **Generate Banner:**
+   - After entering the command, click "Generate Banner" to preview the banner. The JSON structure will update automatically based on your command.
 
-3. **Download the Banner:**
-   - Once the banner is generated, it will be displayed on the right side of the screen.
-   - Click the "Download Banner" button to save the banner to your local machine.
+5. **Download Banner:**
+   - Click "Download Banner" to save the generated banner to your device.
 
-### Commands Examples
+## File Structure
 
-- **Change background:** "Set background to `background1.jpg`."
-- **Add logos:** "Use the `mochi-logo.webp` and `metro-logo.jpg` logos."
-- **Update text:** "Set primary copy to `Exclusive Sale`."
+- **`app.py`:** The main Flask application file.
+- **`banner_generator.py`:** Contains the logic for generating banners and handling the JSON structure.
+- **`templates/`:** Directory containing HTML templates.
+- **`static/`:** Contains static files like uploaded backgrounds, logos, and generated banners.
 
-### Contributions
+## Screenshots
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an Issue to suggest improvements or report bugs.
+![image](https://github.com/user-attachments/assets/5aafda4d-8ce9-43b0-8875-f884c61ea5e6)
 
-### Acknowledgments
 
-- The project is built using [Flask](https://flask.palletsprojects.com/) for the backend.
-- [Pillow](https://python-pillow.org/) is used for image manipulation.
-- [OpenAI](https://openai.com/) GPT-3.5-turbo powers the natural language processing.
-- [Bootstrap](https://getbootstrap.com/) is used for the responsive UI design.
+## Troubleshooting
 
----
+- **Voice Transcription Issues:** If the transcription is not working, ensure that your OpenAI API key is correctly set in the `.env` file.
+- **Image Uploads:** Ensure the uploaded files are in supported formats (`jpg`, `jpeg`, `png`, `webp`).
+- **Error 500:** Check the logs in your terminal to debug issues related to banner generation or file handling.
 
-This `README.md` provides a comprehensive overview of the project, including setup instructions, usage examples, and more. You can customize this template further to fit any specific needs or additional features you may implement.
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
