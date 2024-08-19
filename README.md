@@ -10,6 +10,8 @@ This project is a Flask-based web application that allows users to dynamically g
 - **Contextual File Matching:** The app can approximate file names from user commands and match them with existing files.
 - **Downloadable Banners:** The generated banner can be downloaded directly from the application.
 - **Responsive UI:** Built using Bootstrap for a modern and responsive design.
+![Uploading image.png…]()
+
 
 ## Technology Stack
 
