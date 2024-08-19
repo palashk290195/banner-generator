@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Left Column: Controls -->
+        <div class="col-md-6">
+            <h1>Banner Generator</h1>
+
+            <form method="POST" action="/generate" class="mb-3">
+                <div class="form-group">
+                    <label for="command">Enter your command:</label>
+                    <input type="text" id="command" name="command" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Generate Banner</button>
+            </form>
+
+            <h2>Background Images</h2>
+            <form method="POST" action="/upload_background" enctype="multipart/form-data" class="mb-3">
+                <div class="form-group">
+                    <input type="file" name="file" class="form-control-file">
+                    <button type="submit" class="btn btn-success mt-2">Upload Background</button>
+                </div>
+            </form>
+            <ul class="list-group">
+                {% for background in backgrounds %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <img src="{{ url_for('static', filename='backgrounds/' ~ background) }}" width="100" height="50" class="img-thumbnail">
+                            <span>{{ background }}</span>
+                        </div>
+                        <button onclick="deleteBackground('{{ background }}')" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h2 class="mt-4">Logos</h2>
+            <form method="POST" action="/upload_logo" enctype="multipart/form-data" class="mb-3">
+                <div class="form-group">
+                    <input type="file" name="file" class="form-control-file">
+                    <button type="submit" class="btn btn-success mt-2">Upload Logo</button>
+                </div>
+            </form>
+            <ul class="list-group">
+                {% for logo in logos %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <img src="{{ url_for('static', filename='logos/' ~ logo) }}" width="100" height="50" class="img-thumbnail">
+                            <span>{{ logo }}</span>
+                        </div>
+                        <button onclick="deleteLogo('{{ logo }}')" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h2 class="mt-4">Current JSON Structure</h2>
+            <pre class="bg-light p-3">{{ json_data }}</pre>
+        </div>
+
+        <!-- Right Column: Generated Banner -->
+        <div class="col-md-6">
+            <h2>Generated Banner</h2>
+            <img src="{{ url_for('static', filename=banner_path.split('/')[-1]) }}" alt="Generated Banner" class="img-fluid">
+            <br><br>
+            <a href="/download_banner"><button class="btn btn-info">Download Banner</button></a>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function deleteBackground(filename) {
+        fetch('/delete_background/' + filename)
+            .then(response => response.json())
+            .then(data => location.reload());
+    }
+
+    function deleteLogo(filename) {
+        fetch('/delete_logo/' + filename)
+            .then(response => response.json())
+            .then(data => location.reload());
+    }
+</script>
+</body>
+</html>
